@@ -1,33 +1,26 @@
 #include "motor.hpp"
 
-#ifdef ARDUINO
+#ifdef __arduino__
 #include <Arduino.h>
-#endif
 
 /*Methods to interface with arduino api*/
 void Motor::startUpForArduino() const
 {
-#ifdef ARDUINO
 	pinMode(dir1Pin_,OUTPUT);
 	pinMode(dir2Pin_,OUTPUT);
 	pinMode(enablePin_,OUTPUT);
 	setPWMForArduino();
 	setDirPinsForArduino();
-#endif
 }
 
 void Motor::setPWMForArduino() const
 {
-#ifdef ARDUINO
-//TODO Mapear de 0-100 a -255
-	analogWrite(enablePin_, (speed_ > 255)? 255:speed_);
-#endif
+	analogWrite(enablePin_, speed_);
 }
 
-//TODO debe haber una manera de frenar el motor con estos pines, averiguarla e implementarla
 void Motor::setDirPinsForArduino() const
 {
-#ifdef ARDUINO
+//TODO que pasan en el resto de los estados (LOW-LOW/HIGH-HIGH)
 	if(forward_ == FORWARD)
 	{
 	    digitalWrite(dir1Pin_, LOW);
@@ -38,16 +31,46 @@ void Motor::setDirPinsForArduino() const
 	    digitalWrite(dir1Pin_, HIGH);
         digitalWrite(dir2Pin_, LOw);
 	}
+}
 #endif
+
+#ifdef __ogham__
+void startUpForArduino() const
+{
+//TODO
 }
 
-/*Default constructor: */
+void setPWMForArduino() const
+{
+//TODO
+}
+
+void setDirPinsForArduino() const
+{
+//TODO
+}
+#endif
+
+void sincStartUp() const
+{
+}
+
+void sincPWM() const
+{
+}
+
+void sincDir() const
+{
+}
+
+
+/*Default constructor*/
 Motor::Motor(): dir1Pin_(DIR1PIN_DEFAULT), dir2Pin_(DIR2PIN_DEFAULT), enablePin_(ENABLEPIN_DEFAULT), speed_(0), direction_(FORWARD)
 {
 	startUpForArduino();
 }
 
-/*Parametric constructors: */
+/*Parametric constructors*/
 Motor::Motor(const int &d1, const int &d2, const int &en): dir1Pin_(d1), dir2Pin_(d2), enablePin_(en), speed_(0), direction_(FORWARD)
 {
 	startUpForArduino();
